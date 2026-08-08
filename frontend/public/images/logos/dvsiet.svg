@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="DV">
+  <rect width="128" height="128" rx="28" fill="#22d3ee" fill-opacity="0.12"/>
+  <rect width="128" height="128" rx="28" fill="none" stroke="#22d3ee" stroke-opacity="0.35"/>
+  <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central"
+        font-family="Segoe UI, Inter, system-ui, sans-serif" font-size="42" font-weight="700" fill="#22d3ee">DV</text>
+</svg>

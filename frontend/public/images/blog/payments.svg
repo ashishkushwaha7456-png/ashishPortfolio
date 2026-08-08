@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="A payment layer that survives gateway two">
+  <defs>
+    <linearGradient id="abgytdbuj" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0a11"/>
+      <stop offset="100%" stop-color="#12101d"/>
+    </linearGradient>
+    <radialGradient id="ag1ytdbuj" cx="80%" cy="20%" r="60%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="alytdbuj" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#abgytdbuj)"/>
+  <rect width="1600" height="900" fill="url(#ag1ytdbuj)"/>
+  <text x="110" y="300" font-family="JetBrains Mono, Consolas, monospace" font-size="30" fill="#ffffff" opacity="0.1">const</text><text x="530" y="300" font-family="JetBrains Mono, Consolas, monospace" font-size="30" fill="#ffffff" opacity="0.13">function</text><text x="110" y="390" font-family="JetBrains Mono, Consolas, monospace" font-size="30" fill="#ffffff" opacity="0.16">return</text><text x="530" y="390" font-family="JetBrains Mono, Consolas, monospace" font-size="30" fill="#ffffff" opacity="0.1">await</text><text x="110" y="480" font-family="JetBrains Mono, Consolas, monospace" font-size="30" fill="#ffffff" opacity="0.13">export</text><text x="530" y="480" font-family="JetBrains Mono, Consolas, monospace" font-size="30" fill="#ffffff" opacity="0.16">type</text>
+  <rect x="110" y="640" width="120" height="7" rx="4" fill="url(#alytdbuj)"/>
+  <text x="110" y="724" font-family="Segoe UI, Inter, system-ui, sans-serif" font-size="52" font-weight="700" fill="#ffffff" opacity="0.94">A payment layer that survives gateway two</text>
+</svg>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" role="img" aria-label="Ebease">
+  <defs>
+    <linearGradient id="bgi6xht2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b0b12"/>
+      <stop offset="100%" stop-color="#15121f"/>
+    </linearGradient>
+    <radialGradient id="glowAi6xht2" cx="18%" cy="12%" r="55%">
+      <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowBi6xht2" cx="88%" cy="82%" r="60%">
+      <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="accenti6xht2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="50%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
+    </linearGradient>
+    <pattern id="gridi6xht2" width="56" height="56" patternUnits="userSpaceOnUse">
+      <path d="M56 0H0V56" fill="none" stroke="#ffffff" stroke-opacity="0.04"/>
+    </pattern>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#bgi6xht2)"/>
+  <rect width="1600" height="1000" fill="url(#gridi6xht2)"/>
+  <rect width="1600" height="1000" fill="url(#glowAi6xht2)"/>
+  <rect width="1600" height="1000" fill="url(#glowBi6xht2)"/>
+
+  <!-- browser chrome -->
+  <rect x="72" y="72" width="1456" height="856" rx="28" fill="#ffffff" opacity="0.035" stroke="#ffffff" stroke-opacity="0.1"/>
+  <circle cx="122" cy="126" r="7" fill="#ff5f57"/>
+  <circle cx="148" cy="126" r="7" fill="#febc2e"/>
+  <circle cx="174" cy="126" r="7" fill="#28c840"/>
+  <rect x="212" y="112" width="1180" height="28" rx="14" fill="#ffffff" opacity="0.06"/>
+  <line x1="72" y1="170" x2="1528" y2="170" stroke="#ffffff" stroke-opacity="0.08"/>
+
+  <rect x="120" y="260" width="843.2" height="26" rx="13" fill="#ffffff" opacity="0.16"/><rect x="120" y="368" width="1142.3999999999999" height="26" rx="13" fill="#ffffff" opacity="0.14500000000000002"/><rect x="120" y="476" width="639.1999999999999" height="26" rx="13" fill="#ffffff" opacity="0.13"/><rect x="120" y="584" width="979.1999999999999" height="26" rx="13" fill="#ffffff" opacity="0.115"/><rect x="120" y="692" width="748.0000000000001" height="26" rx="13" fill="#ffffff" opacity="0.1"/><rect x="120" y="800" width="1224" height="26" rx="13" fill="#ffffff" opacity="0.085"/>
+  <rect x="1080" y="300" width="380" height="118" rx="18" fill="#ffffff" opacity="0.07" stroke="#ffffff" stroke-opacity="0.12"/><rect x="1080" y="450" width="380" height="118" rx="18" fill="#ffffff" opacity="0.07" stroke="#ffffff" stroke-opacity="0.12"/><rect x="1080" y="600" width="380" height="118" rx="18" fill="#ffffff" opacity="0.07" stroke="#ffffff" stroke-opacity="0.12"/>
+
+  <rect x="120" y="196" width="140" height="8" rx="4" fill="url(#accenti6xht2)"/>
+  <text x="120" y="868" font-family="Segoe UI, Inter, system-ui, sans-serif" font-size="54" font-weight="700" fill="#ffffff" opacity="0.95">Ebease</text>
+  <text x="120" y="916" font-family="Segoe UI, Inter, system-ui, sans-serif" font-size="26" fill="#ffffff" opacity="0.5">Multi-vendor marketplace · Negotiation · Auctions · AI chat</text>
+</svg>

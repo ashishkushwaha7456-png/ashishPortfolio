@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="The performance checklist">
+  <defs>
+    <linearGradient id="abgp8jadz" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0a11"/>
+      <stop offset="100%" stop-color="#12101d"/>
+    </linearGradient>
+    <radialGradient id="ag1p8jadz" cx="80%" cy="20%" r="60%">
+      <stop offset="0%" stop-color="#475569" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#475569" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="alp8jadz" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#64748b"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#abgp8jadz)"/>
+  <rect width="1600" height="900" fill="url(#ag1p8jadz)"/>
+  <text x="110" y="300" font-family="JetBrains Mono, Consolas, monospace" font-size="30" fill="#ffffff" opacity="0.1">const</text><text x="530" y="300" font-family="JetBrains Mono, Consolas, monospace" font-size="30" fill="#ffffff" opacity="0.13">function</text><text x="110" y="390" font-family="JetBrains Mono, Consolas, monospace" font-size="30" fill="#ffffff" opacity="0.16">return</text><text x="530" y="390" font-family="JetBrains Mono, Consolas, monospace" font-size="30" fill="#ffffff" opacity="0.1">await</text><text x="110" y="480" font-family="JetBrains Mono, Consolas, monospace" font-size="30" fill="#ffffff" opacity="0.13">export</text><text x="530" y="480" font-family="JetBrains Mono, Consolas, monospace" font-size="30" fill="#ffffff" opacity="0.16">type</text>
+  <rect x="110" y="640" width="120" height="7" rx="4" fill="url(#alp8jadz)"/>
+  <text x="110" y="724" font-family="Segoe UI, Inter, system-ui, sans-serif" font-size="52" font-weight="700" fill="#ffffff" opacity="0.94">The performance checklist</text>
+</svg>
