@@ -2,7 +2,7 @@ import { getPosts } from "@/services/content.service";
 import { PERSON, SITE_CONFIG, SITE_URL } from "@/constants/site";
 import { stripMarkdown, truncate } from "@/lib/utils";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 function escapeXml(value: string) {
   return value.replace(

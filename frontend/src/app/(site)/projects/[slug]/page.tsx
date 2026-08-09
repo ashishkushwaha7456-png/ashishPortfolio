@@ -27,8 +27,12 @@ export const revalidate = 3600;
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  const projects = await getProjects();
-  return projects.map((project) => ({ slug: project.slug }));
+  try {
+    const projects = await getProjects();
+    return projects.map((project) => ({ slug: project.slug }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({

@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getPosts, getProjects } from "@/services/content.service";
 import { SITE_URL } from "@/constants/site";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 const STATIC_ROUTES: {
   path: string;

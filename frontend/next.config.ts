@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
+  staticPageGenerationTimeout: 300,
 
   images: {
     formats: ["image/avif", "image/webp"],
@@ -30,6 +31,8 @@ const nextConfig: NextConfig = {
   },
 
   experimental: {
+    workerThreads: false,
+    cpus: 1,
     optimizePackageImports: [
       "lucide-react",
       "framer-motion",

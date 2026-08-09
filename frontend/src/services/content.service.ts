@@ -17,6 +17,19 @@ import type {
   Testimonial,
 } from "@/types";
 import { readingTime, stripMarkdown } from "@/lib/utils";
+import {
+  ABOUT_SEED,
+  ACHIEVEMENTS_SEED,
+  BLOG_SEED,
+  EDUCATION_SEED,
+  EXPERIENCE_SEED,
+  HERO_SEED,
+  PROJECTS_SEED,
+  SKILLS_SEED,
+  SOCIAL_SEED,
+  TESTIMONIALS_SEED,
+} from "@/constants/seed-data";
+import { DEFAULT_SEO, DEFAULT_SETTINGS } from "@/constants/site";
 
 const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api").replace(/\/$/, "");
 
@@ -35,15 +48,69 @@ async function backendFetch<T>(
     (fetchOpts as any).next = { revalidate: options.revalidate };
   }
 
-  const res = await fetch(url, fetchOpts);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch from backend: ${res.statusText}`);
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+  try {
+    const res = await fetch(url, {
+      ...fetchOpts,
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+    if (!res.ok) {
+      throw new Error(`Failed to fetch from backend: ${res.statusText}`);
+    }
+    const json = await res.json();
+    if (!json.success) {
+      throw new Error(json.error ?? "API request failed");
+    }
+    return json.data as T;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    console.warn(`[build-fallback] Failed to fetch ${path}, using seed fallback. Error:`, (error as Error).message);
+    
+    // Resolve appropriate seed fallback based on the endpoint path
+    const cleanPath = path.split("?")[0];
+    if (cleanPath.startsWith("/content/hero")) return HERO_SEED as unknown as T;
+    if (cleanPath.startsWith("/content/about")) return ABOUT_SEED as unknown as T;
+    if (cleanPath.startsWith("/content/experience")) return EXPERIENCE_SEED as unknown as T;
+    if (cleanPath.startsWith("/content/skills")) return SKILLS_SEED as unknown as T;
+    if (cleanPath.startsWith("/content/education")) return EDUCATION_SEED as unknown as T;
+    if (cleanPath.startsWith("/content/achievements")) return ACHIEVEMENTS_SEED as unknown as T;
+    if (cleanPath.startsWith("/content/testimonials")) return TESTIMONIALS_SEED as unknown as T;
+    if (cleanPath.startsWith("/content/blog")) {
+      const parts = cleanPath.split("/");
+      if (parts.length > 3) {
+        const slug = parts[3];
+        const match = BLOG_SEED.find((p) => p.slug === slug);
+        if (match) return match as unknown as T;
+      }
+      return BLOG_SEED as unknown as T;
+    }
+    if (cleanPath.startsWith("/content/social")) return SOCIAL_SEED as unknown as T;
+    if (cleanPath.startsWith("/content/seo")) return DEFAULT_SEO as unknown as T;
+    if (cleanPath.startsWith("/content/settings")) return DEFAULT_SETTINGS as unknown as T;
+    if (cleanPath.startsWith("/content/resume")) {
+      return {
+        isActive: true,
+        label: "Resume",
+        fileUrl: "/resume/Ashish-Kumar-Resume.pdf",
+        version: "2026.1",
+        updatedOn: "2026-01-15",
+      } as unknown as T;
+    }
+    if (cleanPath.startsWith("/content/projects")) {
+      const parts = cleanPath.split("/");
+      if (parts.length > 3) {
+        const slug = parts[3];
+        const match = PROJECTS_SEED.find((p) => p.slug === slug);
+        if (match) return match as unknown as T;
+      }
+      return PROJECTS_SEED as unknown as T;
+    }
+    
+    throw error;
   }
-  const json = await res.json();
-  if (!json.success) {
-    throw new Error(json.error ?? "API request failed");
-  }
-  return json.data as T;
 }
 
 /* ── Hero ─────────────────────────────────────────────────── */
