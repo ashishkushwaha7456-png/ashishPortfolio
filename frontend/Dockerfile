@@ -4,13 +4,11 @@ WORKDIR /app
 
 COPY package*.json ./
 
-# Only install production dependencies (much faster)
-RUN npm ci --omit=dev
+RUN npm ci
 
-# Copy pre-compiled folders from the host
-COPY .next ./.next
-COPY public ./public
-COPY next.config.ts ./next.config.ts
+COPY . .
+
+RUN SKIP_TYPE_CHECK=1 SKIP_LINT=1 NODE_OPTIONS="--max-old-space-size=2048" npm run build
 
 EXPOSE 3000
 

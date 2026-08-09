@@ -37,6 +37,55 @@ async function backendFetch<T>(
   path: string,
   options?: RequestInit & { revalidate?: number | false }
 ): Promise<T> {
+  // --- DIRECT SEED DATA RETURN (BYPASS BACKEND FETCHING) ---
+  const cleanPath = path.split("?")[0];
+  if (cleanPath.startsWith("/content/hero")) return HERO_SEED as unknown as T;
+  if (cleanPath.startsWith("/content/about")) return ABOUT_SEED as unknown as T;
+  if (cleanPath.startsWith("/content/experience")) return EXPERIENCE_SEED as unknown as T;
+  if (cleanPath.startsWith("/content/skills")) return SKILLS_SEED as unknown as T;
+  if (cleanPath.startsWith("/content/education")) return EDUCATION_SEED as unknown as T;
+  if (cleanPath.startsWith("/content/achievements")) return ACHIEVEMENTS_SEED as unknown as T;
+  if (cleanPath.startsWith("/content/testimonials")) return TESTIMONIALS_SEED as unknown as T;
+  if (cleanPath.startsWith("/content/blog")) {
+    const parts = cleanPath.split("/");
+    if (parts.length > 3) {
+      const slug = parts[3];
+      const match = BLOG_SEED.find((p) => p.slug === slug);
+      if (match) return match as unknown as T;
+    }
+    return BLOG_SEED as unknown as T;
+  }
+  if (cleanPath.startsWith("/content/social")) return SOCIAL_SEED as unknown as T;
+  if (cleanPath.startsWith("/content/seo")) return DEFAULT_SEO as unknown as T;
+  if (cleanPath.startsWith("/content/settings")) return DEFAULT_SETTINGS as unknown as T;
+  if (cleanPath.startsWith("/content/resume")) {
+    return {
+      isActive: true,
+      label: "Resume",
+      fileUrl: "/resume/Ashish-Kumar-Resume.pdf",
+      version: "2026.1",
+      updatedOn: "2026-01-15",
+    } as unknown as T;
+  }
+  if (cleanPath.startsWith("/content/projects")) {
+    const parts = cleanPath.split("/");
+    if (parts.length > 3) {
+      const slug = parts[3];
+      const match = PROJECTS_SEED.find((p) => p.slug === slug);
+      if (match) return match as unknown as T;
+    }
+    return PROJECTS_SEED as unknown as T;
+  }
+
+  throw new Error("Direct seed return failed for path: " + path);
+}
+
+/*
+// --- ARCHIVED API FETCH LOGIC (RESTORE WHEN BACKEND SERVER IS SET UP) ---
+async function backendFetchArchived<T>(
+  path: string,
+  options?: RequestInit & { revalidate?: number | false }
+): Promise<T> {
   const url = `${API_URL}${path}`;
   const fetchOpts: RequestInit = {
     method: "GET",
@@ -44,7 +93,6 @@ async function backendFetch<T>(
   };
   
   if (options?.revalidate !== undefined) {
-    // Standard Next.js cache revalidation config
     (fetchOpts as any).next = { revalidate: options.revalidate };
   }
 
@@ -67,51 +115,10 @@ async function backendFetch<T>(
     return json.data as T;
   } catch (error) {
     clearTimeout(timeoutId);
-    console.warn(`[build-fallback] Failed to fetch ${path}, using seed fallback. Error:`, (error as Error).message);
-    
-    // Resolve appropriate seed fallback based on the endpoint path
-    const cleanPath = path.split("?")[0];
-    if (cleanPath.startsWith("/content/hero")) return HERO_SEED as unknown as T;
-    if (cleanPath.startsWith("/content/about")) return ABOUT_SEED as unknown as T;
-    if (cleanPath.startsWith("/content/experience")) return EXPERIENCE_SEED as unknown as T;
-    if (cleanPath.startsWith("/content/skills")) return SKILLS_SEED as unknown as T;
-    if (cleanPath.startsWith("/content/education")) return EDUCATION_SEED as unknown as T;
-    if (cleanPath.startsWith("/content/achievements")) return ACHIEVEMENTS_SEED as unknown as T;
-    if (cleanPath.startsWith("/content/testimonials")) return TESTIMONIALS_SEED as unknown as T;
-    if (cleanPath.startsWith("/content/blog")) {
-      const parts = cleanPath.split("/");
-      if (parts.length > 3) {
-        const slug = parts[3];
-        const match = BLOG_SEED.find((p) => p.slug === slug);
-        if (match) return match as unknown as T;
-      }
-      return BLOG_SEED as unknown as T;
-    }
-    if (cleanPath.startsWith("/content/social")) return SOCIAL_SEED as unknown as T;
-    if (cleanPath.startsWith("/content/seo")) return DEFAULT_SEO as unknown as T;
-    if (cleanPath.startsWith("/content/settings")) return DEFAULT_SETTINGS as unknown as T;
-    if (cleanPath.startsWith("/content/resume")) {
-      return {
-        isActive: true,
-        label: "Resume",
-        fileUrl: "/resume/Ashish-Kumar-Resume.pdf",
-        version: "2026.1",
-        updatedOn: "2026-01-15",
-      } as unknown as T;
-    }
-    if (cleanPath.startsWith("/content/projects")) {
-      const parts = cleanPath.split("/");
-      if (parts.length > 3) {
-        const slug = parts[3];
-        const match = PROJECTS_SEED.find((p) => p.slug === slug);
-        if (match) return match as unknown as T;
-      }
-      return PROJECTS_SEED as unknown as T;
-    }
-    
     throw error;
   }
 }
+*/
 
 /* ── Hero ─────────────────────────────────────────────────── */
 export const getHero = cache(async (): Promise<Hero> => {
