@@ -14,6 +14,8 @@ import { Switch } from "@/components/ui/switch";
 import { loginSchema, type LoginInput } from "@/schemas";
 import type { ApiResponse, SessionUser } from "@/types";
 
+import { setToken } from "@/services/admin-client";
+
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -33,16 +35,24 @@ export function LoginForm() {
 
   const login = useMutation<SessionUser, Error, LoginInput>({
     mutationFn: async (values) => {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "http://localhost:5000/api";
-      const response = await fetch(`${API_URL}/admin/auth/login`, {
+      // ↓ Call the Next.js proxy, NOT the Express backend directly.
+      //   The proxy (/api/admin/auth/login) forwards to Express, reads the JWT
+      //   from the response, and calls setSessionCookie() which sets the
+      //   httpOnly `portfolio_session` cookie on the Next.js domain.
+      //   That cookie is what the middleware and server-component guards read.
+      const response = await fetch("/api/admin/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...values, remember }),
-        credentials: "include",
       });
-      const json = (await response.json()) as ApiResponse<{ user: SessionUser }>;
+      const json = (await response.json()) as ApiResponse<{ user: SessionUser; token?: string }>;
       if (!response.ok || !json.success) {
         throw new Error((json as { error?: string }).error ?? "Sign in failed");
+      }
+      // Also persist the token in localStorage so admin-client.ts can attach
+      // the Bearer header to subsequent API requests.
+      if (json.data.token) {
+        setToken(json.data.token);
       }
       return json.data.user;
     },

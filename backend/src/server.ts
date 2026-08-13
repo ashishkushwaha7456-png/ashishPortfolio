@@ -6,12 +6,21 @@ import mongoose from "mongoose";
 const PORT = process.env.PORT || 5000;
 
 async function startServer() {
+
+
+    app.get("/",(req,res)=>{
+    res.json({ message: "Server is running" });
+  })
+
   // Connect to database
   await connectDatabase();
 
   const server = app.listen(PORT, () => {
     console.log(`[server] Express server running on port ${PORT}`);
   });
+
+
+
 
   const shutdown = () => {
     console.log("[server] Shutdown signal received. Closing server gracefully...");

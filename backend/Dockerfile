@@ -10,6 +10,6 @@ COPY . .
 
 RUN SKIP_TYPE_CHECK=1 SKIP_LINT=1 NODE_OPTIONS="--max-old-space-size=2048" npm run build
 
-EXPOSE 3000
+EXPOSE 5000
 
-CMD ["npm", "run", "dev"]
+CMD ["node", "dist/server.js"]

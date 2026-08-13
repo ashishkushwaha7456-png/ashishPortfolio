@@ -8,7 +8,8 @@ import { Icon } from "@/components/ui/icon";
 import { ThemeToggleButton } from "@/components/layout/theme-toggle";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "@/components/ui/toaster";
-import { useLogout } from "@/services/admin-client";
+import { useQueryClient } from "@tanstack/react-query";
+import { clearAuth, useLogout } from "@/services/admin-client";
 import { ADMIN_NAV } from "@/constants/site";
 import { cn, initials } from "@/lib/utils";
 import { useLockBodyScroll } from "@/hooks";
@@ -23,6 +24,7 @@ export function AdminShell({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [open, setOpen] = React.useState(false);
   const logout = useLogout();
 
@@ -33,9 +35,16 @@ export function AdminShell({
     href === "/admin/dashboard" ? pathname === href : pathname.startsWith(href);
 
   const signOut = () => {
+    clearAuth();
     logout.mutate(undefined, {
       onSuccess() {
+        queryClient.clear();
         toast.success("Signed out");
+        router.replace("/admin/login");
+        router.refresh();
+      },
+      onError() {
+        queryClient.clear();
         router.replace("/admin/login");
         router.refresh();
       },

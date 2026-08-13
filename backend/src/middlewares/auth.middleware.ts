@@ -61,10 +61,22 @@ export function hasRole(userRole: Role | undefined, required: Role): boolean {
   return ROLE_RANK[userRole] >= ROLE_RANK[required];
 }
 
+export function getTokenFromReq(req: Request): string | null {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    const token = authHeader.substring(7).trim();
+    if (token) return token;
+  }
+  if (req.cookies && req.cookies[COOKIE_NAME]) {
+    return req.cookies[COOKIE_NAME];
+  }
+  return null;
+}
+
 /** Express middleware to authenticate session */
 export async function requireAuth(req: Request, res: Response, next: NextFunction) {
   try {
-    const token = req.cookies[COOKIE_NAME];
+    const token = getTokenFromReq(req);
     if (!token) {
       throw new AuthError("You must be signed in", 401);
     }
@@ -83,7 +95,7 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
 export function requireRole(requiredRole: Role) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const token = req.cookies[COOKIE_NAME];
+      const token = getTokenFromReq(req);
       if (!token) {
         throw new AuthError("You must be signed in", 401);
       }
@@ -105,7 +117,7 @@ export function requireRole(requiredRole: Role) {
 /** Express middleware to parse session if available, but let request pass through */
 export async function parseOptionalSession(req: Request, res: Response, next: NextFunction) {
   try {
-    const token = req.cookies[COOKIE_NAME];
+    const token = getTokenFromReq(req);
     if (token) {
       const session = await verifySession(token);
       if (session) {

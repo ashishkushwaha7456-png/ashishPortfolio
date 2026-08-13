@@ -1,10 +1,20 @@
+/** MongoDB database connection module */
 import mongoose from "mongoose";
+import dns from "dns";
 
 export async function connectDatabase(): Promise<boolean> {
   const uri = process.env.MONGODB_URI;
   if (!uri) {
     console.warn("[db] MONGODB_URI is not configured. Falling back to seed data.");
     return false;
+  }
+
+  if (uri.startsWith("mongodb+srv://")) {
+    try {
+      dns.setServers(["8.8.8.8", "1.1.1.1"]);
+    } catch {
+      // Ignore if custom DNS cannot be set
+    }
   }
 
   mongoose.set("strictQuery", true);

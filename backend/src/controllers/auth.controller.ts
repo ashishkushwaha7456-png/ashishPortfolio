@@ -13,7 +13,8 @@ import { AuthError } from "@/middlewares/error.middleware";
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
   const ip = clientIp(req);
-  const limit = rateLimit(`login:${ip}`, 5, 5 * 60_000);
+  const maxAttempts = process.env.NODE_ENV === "production" ? 5 : 50;
+  const limit = rateLimit(`login:${ip}`, maxAttempts, 5 * 60_000);
   if (!limit.allowed) {
     return res.status(429).json({
       success: false,
@@ -48,6 +49,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   if (!user) {
     const envEmail = process.env.ADMIN_EMAIL?.toLowerCase().trim();
     const envPassword = process.env.ADMIN_PASSWORD;
+    // console.log({envEmail,envPassword,password,email});
 
     if (envEmail && envPassword && normalisedEmail === envEmail && password === envPassword) {
       user = {
@@ -76,7 +78,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
   res.json({
     success: true,
-    data: { user },
+    data: { user, token },
   });
 });
 

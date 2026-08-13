@@ -1,7 +1,8 @@
 import type { Request, Response } from "express";
 import bcrypt from "bcryptjs";
+import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { connectDatabase } from "@/config/database";
-import { configureCloudinary } from "@/config/cloudinary";
+import { getS3Client, getS3Bucket, s3PublicUrl, isS3Configured } from "@/config/s3";
 import {
   AboutModel,
   AchievementModel,
@@ -199,11 +200,11 @@ export const seed = asyncHandler(async (req: Request, res: Response) => {
 
 /** POST /api/admin/upload */
 export const uploadFile = asyncHandler(async (req: Request, res: Response) => {
-  const cloudinary = configureCloudinary();
-  if (!cloudinary) {
+  const s3 = getS3Client();
+  if (!s3) {
     return res.status(503).json({
       success: false,
-      error: "Cloudinary is not configured. Add CLOUDINARY_* variables in .env.",
+      error: "AWS S3 is not configured. Add AWS_* variables in .env.",
     });
   }
 
@@ -220,53 +221,43 @@ export const uploadFile = asyncHandler(async (req: Request, res: Response) => {
     return res.status(415).json({ success: false, error: `Unsupported file type: ${file.mimetype}` });
   }
 
-  const result = await new Promise<{
-    secure_url: string;
-    public_id: string;
-    width?: number;
-    height?: number;
-    resource_type: string;
-    format: string;
-    bytes: number;
-  }>((resolve, reject) => {
-    cloudinary.uploader
-      .upload_stream(
-        {
-          folder: `ashish-portfolio/${folder}`,
-          resource_type: "auto",
-          transformation: file.mimetype.startsWith("image/")
-            ? [{ quality: "auto:good", fetch_format: "auto" }]
-            : undefined,
-        },
-        (error, uploaded) => {
-          if (error || !uploaded) reject(error ?? new Error("Upload failed"));
-          else resolve(uploaded as any);
-        }
-      )
-      .end(file.buffer);
-  });
+  // Generate a unique S3 key: folder/timestamp-originalname
+  const sanitizedName = (file.originalname || "upload").replace(/[^a-zA-Z0-9._-]/g, "_");
+  const key = `ashish-portfolio/${folder}/${Date.now()}-${sanitizedName}`;
+  const ext = sanitizedName.split(".").pop() ?? "";
+
+  await s3.send(
+    new PutObjectCommand({
+      Bucket: getS3Bucket(),
+      Key: key,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+    })
+  );
+
+  const isVideo = file.mimetype.startsWith("video/");
 
   res.json({
     success: true,
     data: {
-      url: result.secure_url,
-      publicId: result.public_id,
-      width: result.width,
-      height: result.height,
-      type: result.resource_type === "video" ? "video" : "image",
-      format: result.format,
-      bytes: result.bytes,
+      url: s3PublicUrl(key),
+      publicId: key,
+      width: undefined,
+      height: undefined,
+      type: isVideo ? "video" : "image",
+      format: ext,
+      bytes: file.size,
     },
   });
 });
 
 /** DELETE /api/admin/upload */
 export const deleteFile = asyncHandler(async (req: Request, res: Response) => {
-  const cloudinary = configureCloudinary();
-  if (!cloudinary) {
+  const s3 = getS3Client();
+  if (!s3) {
     return res.status(503).json({
       success: false,
-      error: "Cloudinary is not configured.",
+      error: "AWS S3 is not configured.",
     });
   }
 
@@ -275,7 +266,13 @@ export const deleteFile = asyncHandler(async (req: Request, res: Response) => {
     return res.status(400).json({ success: false, error: "publicId is required" });
   }
 
-  await cloudinary.uploader.destroy(publicId);
+  await s3.send(
+    new DeleteObjectCommand({
+      Bucket: getS3Bucket(),
+      Key: publicId,
+    })
+  );
+
   res.json({
     success: true,
     data: { publicId, deleted: true },

@@ -6,7 +6,8 @@ import {
   useQueryClient,
   type UseQueryOptions,
 } from "@tanstack/react-query";
-import type { ApiResponse } from "@/types";
+import type { ApiResponse, ApiSuccess } from "@/types";
+import { COOKIE_NAME } from "@/constants/site";
 
 /** Thrown by `request` so React Query can branch on HTTP status. */
 export class ApiError extends Error {
@@ -22,16 +23,73 @@ export class ApiError extends Error {
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "http://localhost:5000/api";
 
-async function request<T>(url: string, init?: RequestInit): Promise<T> {
-  const targetUrl = url.startsWith("/api") ? url.replace("/api", API_URL) : url;
+let isHandling401 = false;
+
+export function getToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("portfolio_admin_token");
+}
+
+export function setToken(token: string) {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("portfolio_admin_token", token);
+  }
+}
+
+export function clearAuth() {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("portfolio_admin_token");
+    document.cookie = `${COOKIE_NAME}=; path=/; max-age=0; SameSite=Lax`;
+  }
+}
+
+async function requestEnvelope<T>(url: string, init?: RequestInit): Promise<ApiSuccess<T>> {
+  // Replace the leading "/api" prefix with the full backend API_URL.
+  // Using slice() instead of replace() avoids accidentally rewriting "/api"
+  // that appears later in the path.
+  const targetUrl = url.startsWith("/api") ? API_URL + url.slice("/api".length) : url;
+  const token = getToken();
+
+  const headers: Record<string, string> = {};
+  if (!(init?.body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
   const response = await fetch(targetUrl, {
     ...init,
     credentials: "include",
-    headers:
-      init?.body instanceof FormData
-        ? init?.headers
-        : { "Content-Type": "application/json", ...init?.headers },
+    headers: {
+      ...headers,
+      ...init?.headers,
+    },
   });
+
+  if (response.status === 401) {
+    clearAuth();
+
+    if (typeof window !== "undefined") {
+      void fetch(`${API_URL}/admin/auth/logout`, { method: "POST" }).catch(() => {});
+
+      const pathname = window.location.pathname;
+      if (!pathname.startsWith("/admin/login") && !isHandling401) {
+        isHandling401 = true;
+        window.location.replace("/admin/login");
+        setTimeout(() => {
+          isHandling401 = false;
+        }, 3000);
+      }
+    }
+
+    let errorMsg = "Unauthorized";
+    try {
+      const json = await response.json();
+      if (json.error) errorMsg = json.error;
+    } catch {}
+    throw new ApiError(errorMsg, 401);
+  }
 
   let json: ApiResponse<T>;
   try {
@@ -45,7 +103,12 @@ async function request<T>(url: string, init?: RequestInit): Promise<T> {
     throw new ApiError(failure.error ?? "Request failed", response.status, failure.issues);
   }
 
-  return json.data;
+  return json as ApiSuccess<T>;
+}
+
+async function request<T>(url: string, init?: RequestInit): Promise<T> {
+  const envelope = await requestEnvelope<T>(url, init);
+  return envelope.data;
 }
 
 const base = (resource: string) => `${API_URL}/admin/content/${resource}`;
@@ -81,14 +144,7 @@ export function useResourceList<T>(
   return useQuery<ListResult<T>, ApiError>({
     queryKey: ["admin", resource, params],
     queryFn: async () => {
-      const response = await fetch(`${base(resource)}?${search}`, { credentials: "include" });
-      const json = (await response.json()) as ApiResponse<T[]>;
-      if (!response.ok || !json.success) {
-        throw new ApiError(
-          (json as { error?: string }).error ?? "Failed to load",
-          response.status,
-        );
-      }
+      const json = await requestEnvelope<T[]>(`${base(resource)}?${search}`);
       return {
         items: json.data,
         total: json.meta?.total ?? json.data.length,
@@ -124,13 +180,13 @@ export function useSaveResource<T>(resource: string, id?: string) {
     mutationFn: (values) =>
       id && id !== "new"
         ? request<T>(`${base(resource)}/${id}`, {
-            method: "PATCH",
-            body: JSON.stringify(values),
-          })
+          method: "PATCH",
+          body: JSON.stringify(values),
+        })
         : request<T>(base(resource), {
-            method: "POST",
-            body: JSON.stringify(values),
-          }),
+          method: "POST",
+          body: JSON.stringify(values),
+        }),
     onSuccess() {
       void queryClient.invalidateQueries({ queryKey: ["admin", resource] });
     },
@@ -190,6 +246,13 @@ export function useAnalytics(days = 30) {
 
 export function useLogout() {
   return useMutation({
-    mutationFn: () => request<{ signedOut: boolean }>("/api/admin/auth/logout", { method: "POST" }),
+    mutationFn: async () => {
+      // Call the Next.js proxy directly (not via requestEnvelope) so the
+      // httpOnly session cookie is cleared server-side by clearSessionCookie().
+      // requestEnvelope would rewrite "/api/…" → backend URL, bypassing the proxy.
+      const res = await fetch("/api/admin/auth/logout", { method: "POST" });
+      const json = (await res.json()) as { success: boolean; data?: { signedOut: boolean } };
+      return json.data ?? { signedOut: true };
+    },
   });
 }
