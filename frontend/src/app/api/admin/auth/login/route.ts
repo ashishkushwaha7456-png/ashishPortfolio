@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { COOKIE_NAME, SESSION_MAX_AGE } from "@/constants/site";
 
-const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api").replace(/\/$/, "");
+const API_URL = (process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000/api").replace(/\/$/, "");
 
 export async function POST(request: Request) {
   try {

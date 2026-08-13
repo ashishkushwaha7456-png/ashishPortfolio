@@ -21,7 +21,10 @@ export class ApiError extends Error {
   }
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "http://localhost:5000/api";
+// All client-side API calls go through the Next.js backend proxy at /api/backend.
+// The proxy forwards them server-side to the Express backend (no mixed-content).
+// NEXT_PUBLIC_API_URL is NOT used client-side to avoid embedding the EC2 IP in the bundle.
+const PROXY_BASE = "/api/backend";
 
 let isHandling401 = false;
 
@@ -44,10 +47,9 @@ export function clearAuth() {
 }
 
 async function requestEnvelope<T>(url: string, init?: RequestInit): Promise<ApiSuccess<T>> {
-  // Replace the leading "/api" prefix with the full backend API_URL.
-  // Using slice() instead of replace() avoids accidentally rewriting "/api"
-  // that appears later in the path.
-  const targetUrl = url.startsWith("/api") ? API_URL + url.slice("/api".length) : url;
+  // Map  /api/<rest>  →  /api/backend/<rest>  (same-origin proxy on Next.js/Vercel).
+  // Absolute URLs are kept as-is (should not occur after this change).
+  const targetUrl = url.startsWith("/api/") ? PROXY_BASE + url.slice("/api".length) : url;
   const token = getToken();
 
   const headers: Record<string, string> = {};
@@ -71,7 +73,7 @@ async function requestEnvelope<T>(url: string, init?: RequestInit): Promise<ApiS
     clearAuth();
 
     if (typeof window !== "undefined") {
-      void fetch(`${API_URL}/admin/auth/logout`, { method: "POST" }).catch(() => {});
+      void fetch("/api/admin/auth/logout", { method: "POST" }).catch(() => {});
 
       const pathname = window.location.pathname;
       if (!pathname.startsWith("/admin/login") && !isHandling401) {
@@ -111,7 +113,7 @@ async function request<T>(url: string, init?: RequestInit): Promise<T> {
   return envelope.data;
 }
 
-const base = (resource: string) => `${API_URL}/admin/content/${resource}`;
+const base = (resource: string) => `${PROXY_BASE}/admin/content/${resource}`;
 
 export interface ListParams {
   page?: number;

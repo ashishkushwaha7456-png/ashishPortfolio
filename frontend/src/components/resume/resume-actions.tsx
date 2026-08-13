@@ -11,8 +11,7 @@ export function ResumeActions({ fileUrl }: { fileUrl: string }) {
 
   const trackDownload = () => {
     // Fire-and-forget: a failed beacon must never block the download.
-    const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "http://localhost:5000/api";
-    void fetch(`${API_URL}/analytics`, {
+    void fetch("/api/backend/analytics", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ type: "download", path: "/resume", meta: { file: fileUrl } }),

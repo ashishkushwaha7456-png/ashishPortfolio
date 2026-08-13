@@ -58,8 +58,7 @@ function ContactFormInner() {
 
   const mutation = useMutation({
     mutationFn: async (values: ContactInput) => {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "http://localhost:5000/api";
-      const response = await fetch(`${API_URL}/contact`, {
+      const response = await fetch("/api/backend/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),

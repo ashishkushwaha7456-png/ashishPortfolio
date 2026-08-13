@@ -16,8 +16,7 @@ export function NowPlaying({ className }: { className?: string }) {
   const { data } = useQuery<NowPlayingData>({
     queryKey: ["spotify"],
     queryFn: async () => {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "http://localhost:5000/api";
-      const response = await fetch(`${API_URL}/spotify`);
+      const response = await fetch("/api/backend/spotify");
       const json = (await response.json()) as ApiResponse<NowPlayingData>;
       return json.success ? json.data : { isPlaying: false };
     },

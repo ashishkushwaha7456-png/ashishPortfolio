@@ -16,7 +16,7 @@ function Beacon() {
     if (lastSent.current === path) return;
     lastSent.current = path;
 
-    const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "http://localhost:5000/api";
+    const ANALYTICS_URL = "/api/backend/analytics";
     const payload = JSON.stringify({
       type: "pageview",
       path,
@@ -24,16 +24,13 @@ function Beacon() {
     });
 
     // sendBeacon survives the page unloading mid-navigation.
-    if (navigator.sendBeacon) {
-      navigator.sendBeacon(`${API_URL}/analytics`, new Blob([payload], { type: "application/json" }));
-    } else {
-      void fetch(`${API_URL}/analytics`, {
-        method: "POST",
-        body: payload,
-        headers: { "Content-Type": "application/json" },
-        keepalive: true,
-      }).catch(() => {});
-    }
+    // Note: sendBeacon requires an absolute URL on some browsers; use fetch as universal fallback.
+    void fetch(ANALYTICS_URL, {
+      method: "POST",
+      body: payload,
+      headers: { "Content-Type": "application/json" },
+      keepalive: true,
+    }).catch(() => {});
   }, [pathname, searchParams]);
 
   return null;

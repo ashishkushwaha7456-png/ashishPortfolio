@@ -31,7 +31,8 @@ import {
 } from "@/constants/seed-data";
 import { DEFAULT_SEO, DEFAULT_SETTINGS } from "@/constants/site";
 
-const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api").replace(/\/$/, "");
+// Server-only variable — never embedded in the client bundle.
+const API_URL = (process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000/api").replace(/\/$/, "");
 
 async function backendFetch<T>(
   path: string,
