@@ -47,9 +47,11 @@ export function clearAuth() {
 }
 
 async function requestEnvelope<T>(url: string, init?: RequestInit): Promise<ApiSuccess<T>> {
-  // Map  /api/<rest>  →  /api/backend/<rest>  (same-origin proxy on Next.js/Vercel).
-  // Absolute URLs are kept as-is (should not occur after this change).
-  const targetUrl = url.startsWith("/api/") ? PROXY_BASE + url.slice("/api".length) : url;
+  const targetUrl = url.startsWith("/api/backend")
+    ? url
+    : url.startsWith("/api/")
+      ? PROXY_BASE + url.slice("/api".length)
+      : url;
   const token = getToken();
 
   const headers: Record<string, string> = {};
@@ -113,7 +115,7 @@ async function request<T>(url: string, init?: RequestInit): Promise<T> {
   return envelope.data;
 }
 
-const base = (resource: string) => `${PROXY_BASE}/admin/content/${resource}`;
+const base = (resource: string) => `/api/admin/content/${resource}`;
 
 export interface ListParams {
   page?: number;
