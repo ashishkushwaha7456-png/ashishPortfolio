@@ -31,4 +31,7 @@ jobs:
         run: npm ci
 
       - name: Build frontend
+        env:
+          NEXT_PUBLIC_API_URL: http://3.111.70.180:5000/api
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
         run: npm run build
