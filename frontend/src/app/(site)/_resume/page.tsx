@@ -90,10 +90,12 @@ export default async function ResumePage() {
                   <ExternalLink className="size-3.5" />
                   LinkedIn
                 </a>
+                {/* GitHub link — disabled
                 <a href={PERSON.github} target="_blank" rel="noreferrer noopener" className="inline-flex items-center gap-1.5 hover:text-foreground">
                   <ExternalLink className="size-3.5" />
                   GitHub
                 </a>
+                */}
               </div>
             </header>
 

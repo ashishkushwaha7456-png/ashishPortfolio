@@ -1,19 +1,19 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { Hero, HeroHighlights } from "@/components/home/hero";
+import { Hero /*, HeroHighlights */ } from "@/components/home/hero";
 import { TechMarquee } from "@/components/home/tech-marquee";
 import { AboutPreview } from "@/components/home/about-preview";
 import { FeaturedProjects } from "@/components/home/featured-projects";
-import { Testimonials } from "@/components/home/testimonials";
+// import { Testimonials } from "@/components/home/testimonials";
 import { ContactCTA } from "@/components/home/contact-cta";
 import { Section, SectionHeading } from "@/components/shared/section";
 import { ExperienceTimeline } from "@/components/shared/experience-timeline";
 import { SkillCloud } from "@/components/shared/skill-grid";
 import { BlogCard } from "@/components/shared/blog-card";
-import { GitHubStats } from "@/components/shared/github-stats";
+// import { GitHubStats } from "@/components/shared/github-stats";
 import { Reveal } from "@/components/motion/reveal";
 import { getHomePageData } from "@/services/content.service";
-import { getContributionGraph, getGitHubStats } from "@/services/github.service";
+// import { getContributionGraph, getGitHubStats } from "@/services/github.service";
 import { buildMetadata } from "@/lib/seo";
 
 /* Static shell, revalidated hourly. Content edits from /admin surface within
@@ -25,20 +25,23 @@ export async function generateMetadata() {
 }
 
 export default async function HomePage() {
-  const { hero, about, projects, experience, skills, testimonials, posts, socials, settings } =
+  const { hero, about, projects, experience, skills, /* testimonials, */ posts, socials, settings } =
     await getHomePageData();
 
-  const [githubStats, contributions] = settings.features.github
-    ? await Promise.all([getGitHubStats(), getContributionGraph()])
-    : [null, null];
+  // GitHub disabled sitewide.
+  // const [githubStats, contributions] = settings.features.github
+  //   ? await Promise.all([getGitHubStats(), getContributionGraph()])
+  //   : [null, null];
 
   return (
     <>
       <Hero hero={hero} socials={socials} />
 
+      {/* Hero highlights strip — disabled
       <div className="relative -mt-8 pb-8">
         <HeroHighlights hero={hero} />
       </div>
+      */}
 
       <TechMarquee skills={skills} />
 
@@ -73,7 +76,7 @@ export default async function HomePage() {
         <SkillCloud skills={skills} />
       </Section>
 
-      {/* GitHub */}
+      {/* GitHub — disabled
       {githubStats && (
         <Section id="stats" className="border-y border-border bg-surface/50">
           <SectionHeading
@@ -84,8 +87,11 @@ export default async function HomePage() {
           <GitHubStats stats={githubStats} contributions={contributions} />
         </Section>
       )}
+      */}
 
+      {/* Testimonials ("Feedback from the people I ship with") — disabled
       {settings.features.testimonials && <Testimonials testimonials={testimonials} />}
+      */}
 
       {/* Writing */}
       {settings.features.blog && posts.length > 0 && (

@@ -66,7 +66,7 @@ export function AboutPreview({ about }: { about: About }) {
             <div className="relative overflow-hidden rounded-3xl border border-border">
               <div className="relative aspect-[4/5]">
                 <Image
-                  src={about.image?.url ?? "/images/about.svg"}
+                  src={about.image?.url ?? "/images/about-developer.svg"}
                   alt={about.image?.alt ?? "Portrait"}
                   fill
                   sizes="(max-width: 1024px) 100vw, 40vw"

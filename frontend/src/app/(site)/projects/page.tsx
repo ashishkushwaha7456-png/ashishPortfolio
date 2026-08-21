@@ -36,7 +36,9 @@ export default async function ProjectsPage() {
               "@type": "CreativeWork",
               name: project.title,
               description: project.summary,
-              url: absoluteUrl(`/projects/${project.slug}`),
+              // Detail pages are disabled, so point search engines at the live
+              // product; fall back to the listing when there is no live URL.
+              url: project.links.live || absoluteUrl("/projects"),
             })),
           },
         ]}

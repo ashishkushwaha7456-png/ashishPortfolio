@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ArrowUpRight, ArrowUp, Circle } from "lucide-react";
+import { ArrowUpRight, ArrowUp, Circle, Download } from "lucide-react";
+import { Marquee } from "@/components/motion/marquee";
 import { Icon } from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
 import { Magnetic } from "@/components/motion/magnetic";
@@ -21,6 +22,8 @@ interface FooterProps {
 export function Footer({ socials, available = true, showNowPlaying = false }: FooterProps) {
   const time = useCurrentTime(PERSON.timezone);
   const year = 2026;
+
+  // Continuous marquee does not require scroll hooks
 
   return (
     <footer className="relative mt-32 overflow-hidden border-t border-border">
@@ -100,21 +103,36 @@ export function Footer({ socials, available = true, showNowPlaying = false }: Fo
                 {column.title}
               </h3>
               <ul className="space-y-2.5">
-                {column.links.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      target={"external" in link && link.external ? "_blank" : undefined}
-                      rel={"external" in link && link.external ? "noreferrer noopener" : undefined}
-                      className="group inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                      {link.label}
-                      {"external" in link && link.external && (
-                        <ArrowUpRight className="size-3 opacity-0 transition-opacity group-hover:opacity-60" />
-                      )}
-                    </Link>
-                  </li>
-                ))}
+                {column.links.map((link) =>
+                  // A download must be a plain anchor — next/link would try to
+                  // client-navigate to the file instead of saving it.
+                  "download" in link && link.download ? (
+                    <li key={link.label}>
+                      <a
+                        href={link.href}
+                        download
+                        className="group inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                      >
+                        {link.label}
+                        <Download className="size-3 opacity-0 transition-opacity group-hover:opacity-60" />
+                      </a>
+                    </li>
+                  ) : (
+                    <li key={link.label}>
+                      <Link
+                        href={link.href}
+                        target={"external" in link && link.external ? "_blank" : undefined}
+                        rel={"external" in link && link.external ? "noreferrer noopener" : undefined}
+                        className="group inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                      >
+                        {link.label}
+                        {"external" in link && link.external && (
+                          <ArrowUpRight className="size-3 opacity-0 transition-opacity group-hover:opacity-60" />
+                        )}
+                      </Link>
+                    </li>
+                  ),
+                )}
               </ul>
             </div>
           ))}
@@ -146,11 +164,13 @@ export function Footer({ socials, available = true, showNowPlaying = false }: Fo
       {/* Oversized wordmark */}
       <div
         aria-hidden
-        className="pointer-events-none select-none overflow-hidden mask-fade-b"
+        className="pointer-events-none select-none overflow-hidden mask-fade-b translate-y-[18%]"
       >
-        <p className="-mb-4 translate-y-[18%] whitespace-nowrap text-center font-display text-[18vw] font-bold leading-none tracking-tighter text-foreground/[0.035] md:-mb-8">
-          ASHISH KUMAR
-        </p>
+        <Marquee speed={30} fade={false} pauseOnHover={false}>
+          <span className="mx-6 font-display text-[18vw] font-bold leading-none tracking-tighter text-foreground/[0.035]">
+            ASHISH KUMAR
+          </span>
+        </Marquee>
       </div>
     </footer>
   );

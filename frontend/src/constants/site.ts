@@ -7,20 +7,27 @@ export const PERSON = {
   name: "Ashish Kumar",
   firstName: "Ashish",
   title: "MERN Stack Developer",
-  subtitle: "React.js · Node.js · TypeScript",
+  subtitle: "React.js · Node.js · Javascript",
   email: "ashishkushwaha6283@gmail.com",
   phone: "+91 8954996918",
   phoneRaw: "+918954996918",
   location: "Noida, Uttar Pradesh, India",
   shortLocation: "Noida, India",
   timezone: "Asia/Kolkata",
-  github: "https://github.com/ashishkushwaha",
+  github: "https://github.com/ashishkushwaha7456-png",
   githubUsername: "ashishkushwaha",
-  linkedin: "https://www.linkedin.com/in/ashish-kumar-dev",
-  twitter: "https://x.com/ashishkushwaha",
-  twitterHandle: "@ashishkushwaha",
+  linkedin: "https://www.linkedin.com/in/ashish-kumar-a41a96381/",
+  // twitter: "https://x.com/ashishkushwaha",
+  // twitterHandle: "@ashishkushwaha",
   experienceStart: "2023-03-01",
 } as const;
+
+/**
+ * The /resume page is disabled, so every "Resume" action downloads this file
+ * directly. Pair it with a `download` attribute on a plain <a> — next/link
+ * does not forward that attribute.
+ */
+export const RESUME_FILE = "/resume/Ashish-Kumar-Resume.pdf";
 
 export const SITE_CONFIG = {
   name: `${PERSON.name} — ${PERSON.title}`,
@@ -55,13 +62,13 @@ export const NAV_LINKS = [
   { label: "Experience", href: "/experience", shortcut: "e" },
   { label: "Projects", href: "/projects", shortcut: "p" },
   { label: "Skills", href: "/skills", shortcut: "s" },
-  { label: "Blog", href: "/blog", shortcut: "b" },
+  // { label: "Blog", href: "/blog", shortcut: "b" },
   { label: "Contact", href: "/contact", shortcut: "c" },
 ] as const;
 
 export const SECONDARY_NAV_LINKS = [
   { label: "Achievements", href: "/achievements" },
-  { label: "Resume", href: "/resume" },
+  { label: "Resume", href: RESUME_FILE, download: true },
 ] as const;
 
 export const FOOTER_LINKS = [
@@ -78,16 +85,16 @@ export const FOOTER_LINKS = [
     title: "More",
     links: [
       { label: "Skills", href: "/skills" },
-      { label: "Achievements", href: "/achievements" },
-      { label: "Resume", href: "/resume" },
-      { label: "Blog", href: "/blog" },
+      // { label: "Achievements", href: "/achievements" },
+      { label: "Resume", href: RESUME_FILE, download: true },
+      // { label: "Blog", href: "/blog" },
     ],
   },
   {
     title: "Connect",
     links: [
       { label: "Contact", href: "/contact" },
-      { label: "GitHub", href: PERSON.github, external: true },
+      // { label: "GitHub", href: PERSON.github, external: true },
       { label: "LinkedIn", href: PERSON.linkedin, external: true },
       { label: "Email", href: `mailto:${PERSON.email}`, external: true },
     ],
@@ -97,8 +104,8 @@ export const FOOTER_LINKS = [
     links: [
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Terms", href: "/terms" },
-      { label: "RSS", href: "/rss.xml", external: true },
-      { label: "Sitemap", href: "/sitemap.xml", external: true },
+      // { label: "RSS", href: "/rss.xml", external: true },
+      // { label: "Sitemap", href: "/sitemap.xml", external: true },
     ],
   },
 ] as const;
@@ -137,7 +144,7 @@ export const DEFAULT_SETTINGS: Settings = {
   coordinates: { lat: 28.5355, lng: 77.391 },
   maintenanceMode: false,
   features: {
-    blog: true,
+    blog: false,
     testimonials: true,
     spotify: true,
     github: true,
@@ -155,7 +162,7 @@ export const DEFAULT_SEO: SEOSettings = {
   description: SITE_CONFIG.description,
   keywords: [...SITE_CONFIG.keywords],
   ogImage: SITE_CONFIG.ogImage,
-  twitterHandle: PERSON.twitterHandle,
+  // twitterHandle: PERSON.twitterHandle,
   noIndex: false,
 };
 
@@ -169,7 +176,7 @@ export const HOME_SECTIONS = [
   { id: "skills", label: "Skills" },
   { id: "stats", label: "Stats" },
   { id: "testimonials", label: "Praise" },
-  { id: "blog", label: "Writing" },
+  // { id: "blog", label: "Writing" },
   { id: "contact", label: "Contact" },
 ] as const;
 

@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import Image from "next/image";
-import Link from "next/link";
+// import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Calendar, Github, Globe } from "lucide-react";
+import { ArrowUpRight, Calendar, /* Github, */ Globe } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { TiltCard } from "@/components/motion/tilt-card";
 import { cn } from "@/lib/utils";
@@ -34,10 +34,14 @@ export function ProjectCard({
       className={cn("group", className)}
     >
       <TiltCard max={featured ? 5 : 7} className="h-full">
+        {/* Case-study pages are disabled, so the card itself no longer
+            navigates — the Live Site button below is the only action.
         <Link
           href={`/projects/${project.slug}`}
           data-cursor="view"
           data-cursor-label="View case study"
+        */}
+        <div
           className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-500 hover:border-foreground/15 hover:shadow-[0_24px_64px_-32px_rgba(0,0,0,0.5)]"
         >
           {/* Thumbnail */}
@@ -140,24 +144,32 @@ export function ProjectCard({
             </div>
 
             {/* External links */}
-            {(project.links.live || project.links.github) && (
-              <div className="mt-4 flex items-center gap-3 border-t border-border pt-4">
-                {project.links.live && (
-                  <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <Globe className="size-3" />
-                    Live
-                  </span>
-                )}
+            {project.links.live && (
+              <div className="mt-4 border-t border-border pt-4">
+                <a
+                  href={project.links.live}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  data-cursor="hover"
+                  aria-label={`Open the live site for ${project.title}`}
+                  className="group/live inline-flex items-center gap-2 rounded-full border border-border bg-secondary/50 px-4 py-2 text-xs font-medium transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/50 hover:text-primary"
+                >
+                  <Globe className="size-3.5" />
+                  Live Site
+                  <ArrowUpRight className="size-3.5 transition-transform group-hover/live:-translate-y-0.5 group-hover/live:translate-x-0.5" />
+                </a>
+                {/* GitHub source link — disabled
                 {project.links.github && (
                   <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
                     <Github className="size-3" />
                     Source
                   </span>
                 )}
+                */}
               </div>
             )}
           </div>
-        </Link>
+        </div>
       </TiltCard>
     </motion.article>
   );

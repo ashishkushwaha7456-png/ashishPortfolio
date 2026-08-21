@@ -4,7 +4,7 @@ import { Reveal, StaggerGroup, StaggerItem } from "@/components/motion/reveal";
 import { Counter } from "@/components/motion/counter";
 import { Icon } from "@/components/ui/icon";
 import { Badge } from "@/components/ui/badge";
-import { GitHubStats } from "@/components/shared/github-stats";
+// import { GitHubStats } from "@/components/shared/github-stats";
 import { ExperienceTimeline } from "@/components/shared/experience-timeline";
 import { JsonLd } from "@/components/seo/json-ld";
 import {
@@ -12,9 +12,9 @@ import {
   getAchievements,
   getEducation,
   getExperience,
-  getSettings,
+  // getSettings,
 } from "@/services/content.service";
-import { getContributionGraph, getGitHubStats } from "@/services/github.service";
+// import { getContributionGraph, getGitHubStats } from "@/services/github.service";
 import { breadcrumbSchema, buildMetadata } from "@/lib/seo";
 import { formatDate } from "@/lib/utils";
 import { PERSON } from "@/constants/site";
@@ -31,17 +31,18 @@ export async function generateMetadata() {
 }
 
 export default async function AboutPage() {
-  const [about, experience, education, achievements, settings] = await Promise.all([
+  const [about, experience, education, achievements] = await Promise.all([
     getAbout(),
     getExperience(),
     getEducation(),
     getAchievements(),
-    getSettings(),
+    // getSettings(),
   ]);
 
-  const [githubStats, contributions] = settings.features.github
-    ? await Promise.all([getGitHubStats(), getContributionGraph()])
-    : [null, null];
+  // GitHub disabled sitewide.
+  // const [githubStats, contributions] = settings.features.github
+  //   ? await Promise.all([getGitHubStats(), getContributionGraph()])
+  //   : [null, null];
 
   return (
     <>
@@ -96,7 +97,7 @@ export default async function AboutPage() {
             <div className="relative overflow-hidden rounded-3xl border border-border">
               <div className="relative aspect-[4/5]">
                 <Image
-                  src={about.image?.url ?? "/images/about.svg"}
+                  src={about.image?.url ?? "/images/about-developer.svg"}
                   alt={about.image?.alt ?? PERSON.name}
                   fill
                   sizes="(max-width: 1024px) 100vw, 40vw"
@@ -290,7 +291,7 @@ export default async function AboutPage() {
         </div>
       </Section>
 
-      {/* GitHub */}
+      {/* GitHub — disabled
       {githubStats && (
         <Section className="border-t border-border">
           <SectionHeading
@@ -301,8 +302,9 @@ export default async function AboutPage() {
           <GitHubStats stats={githubStats} contributions={contributions} />
         </Section>
       )}
+      */}
 
-      {/* Beyond code */}
+      {/* Beyond code — disabled
       <Section className="border-t border-border">
         <SectionHeading eyebrow="Outside work" title="Beyond the editor" align="center" />
         <div className="mx-auto flex max-w-2xl flex-wrap justify-center gap-2.5">
@@ -313,6 +315,7 @@ export default async function AboutPage() {
           ))}
         </div>
       </Section>
+      */}
     </>
   );
 }

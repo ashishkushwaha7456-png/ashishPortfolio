@@ -125,14 +125,23 @@ export function Hero({ hero, socials }: HeroProps) {
                       }
                       className="rounded-full"
                     >
-                      <Link
-                        href={cta.href}
-                        target={cta.external ? "_blank" : undefined}
-                        rel={cta.external ? "noreferrer noopener" : undefined}
-                      >
-                        <Icon name={cta.icon} size={16} />
-                        {cta.label}
-                      </Link>
+                      {/* A file href is a download, not a route — next/link
+                          would try to client-navigate to the PDF. */}
+                      {cta.href.endsWith(".pdf") ? (
+                        <a href={cta.href} download>
+                          <Icon name={cta.icon} size={16} />
+                          {cta.label}
+                        </a>
+                      ) : (
+                        <Link
+                          href={cta.href}
+                          target={cta.external ? "_blank" : undefined}
+                          rel={cta.external ? "noreferrer noopener" : undefined}
+                        >
+                          <Icon name={cta.icon} size={16} />
+                          {cta.label}
+                        </Link>
+                      )}
                     </Button>
                   </Magnetic>
                 ))}

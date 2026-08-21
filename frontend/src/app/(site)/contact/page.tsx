@@ -142,7 +142,7 @@ export default async function ContactPage() {
               );
             })}
 
-            <Reveal delay={0.24} className="rounded-2xl border border-border bg-card p-5">
+            {/* <Reveal delay={0.24} className="rounded-2xl border border-border bg-card p-5">
               <p className="mb-4 text-xs uppercase tracking-wider text-muted-foreground">
                 Elsewhere
               </p>
@@ -162,7 +162,7 @@ export default async function ContactPage() {
                     </a>
                   ))}
               </div>
-            </Reveal>
+            </Reveal> */}
           </aside>
         </div>
       </Section>

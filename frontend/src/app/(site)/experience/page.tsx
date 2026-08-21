@@ -1,5 +1,6 @@
-import Link from "next/link";
-import { ArrowUpRight, Download } from "lucide-react";
+// Both are only referenced inside the commented-out "Let's talk" button below.
+// import Link from "next/link";
+import { /* ArrowUpRight, */ Download } from "lucide-react";
 import { PageHeader, Section, SectionHeading } from "@/components/shared/section";
 import { ExperienceTimeline } from "@/components/shared/experience-timeline";
 import { Reveal } from "@/components/motion/reveal";
@@ -11,12 +12,11 @@ import { JsonLd } from "@/components/seo/json-ld";
 import {
   getEducation,
   getExperience,
-  getProjects,
   getSkills,
 } from "@/services/content.service";
 import { breadcrumbSchema, buildMetadata } from "@/lib/seo";
 import { durationBetween, formatDate, unique } from "@/lib/utils";
-import { PERSON } from "@/constants/site";
+import { PERSON, RESUME_FILE } from "@/constants/site";
 
 export const revalidate = 3600;
 
@@ -30,10 +30,9 @@ export async function generateMetadata() {
 }
 
 export default async function ExperiencePage() {
-  const [experience, education, projects, skills] = await Promise.all([
+  const [experience, education, skills] = await Promise.all([
     getExperience(),
     getEducation(),
-    getProjects(),
     getSkills(),
   ]);
 
@@ -42,7 +41,7 @@ export default async function ExperiencePage() {
   const summary = [
     { label: "Years of experience", value: 3, suffix: "+" },
     { label: "Companies", value: experience.length, suffix: "" },
-    { label: "Projects delivered", value: projects.length + 9, suffix: "+" },
+    { label: "Projects delivered", value: 6, suffix: "+" },
     { label: "Technologies used", value: totalTech, suffix: "" },
   ];
 
@@ -62,17 +61,18 @@ export default async function ExperiencePage() {
       >
         <div className="flex flex-wrap gap-3">
           <Button asChild size="lg" variant="gradient" className="rounded-full">
-            <Link href="/resume">
+            {/* Plain anchor + download: the /resume page is disabled. */}
+            <a href={RESUME_FILE} download>
               <Download className="size-4" />
               Download resume
-            </Link>
+            </a>
           </Button>
-          <Button asChild size="lg" variant="outline" className="rounded-full">
+          {/* <Button asChild size="lg" variant="outline" className="rounded-full">
             <Link href="/contact">
               Let&apos;s talk
               <ArrowUpRight className="size-4" />
             </Link>
-          </Button>
+          </Button> */}
         </div>
       </PageHeader>
 

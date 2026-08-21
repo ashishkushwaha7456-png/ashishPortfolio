@@ -107,7 +107,7 @@ export function personSchema(opts: { skills?: string[]; sameAs?: string[] } = {}
       addressRegion: "Uttar Pradesh",
       addressCountry: "IN",
     },
-    sameAs: opts.sameAs ?? [PERSON.github, PERSON.linkedin, PERSON.twitter],
+    sameAs: opts.sameAs ?? [/* PERSON.github, */ PERSON.linkedin, PERSON.twitter],
     knowsAbout: opts.skills ?? [
       "React.js",
       "Next.js",

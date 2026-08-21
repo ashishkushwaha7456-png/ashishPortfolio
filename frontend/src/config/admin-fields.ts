@@ -775,7 +775,7 @@ export const ADMIN_FORMS: Record<string, ResourceFormDef> = {
       { name: "coordinates.lng", label: "Longitude", type: "number", span: 6, section: "location" },
       { name: "features.blog", label: "Blog", type: "switch", span: 3, section: "features" },
       { name: "features.testimonials", label: "Testimonials", type: "switch", span: 3, section: "features" },
-      { name: "features.github", label: "GitHub stats", type: "switch", span: 3, section: "features" },
+      // { name: "features.github", label: "GitHub stats", type: "switch", span: 3, section: "features" },
       { name: "features.analytics", label: "Analytics", type: "switch", span: 3, section: "features" },
       { name: "features.cursor", label: "Custom cursor", type: "switch", span: 3, section: "features" },
       { name: "features.loadingScreen", label: "Intro screen", type: "switch", span: 3, section: "features" },

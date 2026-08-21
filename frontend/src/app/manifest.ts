@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { PERSON, SITE_CONFIG } from "@/constants/site";
+import { PERSON, RESUME_FILE, SITE_CONFIG } from "@/constants/site";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -20,7 +20,7 @@ export default function manifest(): MetadataRoute.Manifest {
     ],
     shortcuts: [
       { name: "Projects", url: "/projects", description: "Case studies" },
-      { name: "Resume", url: "/resume", description: "Download the resume" },
+      { name: "Resume", url: RESUME_FILE, description: "Download the resume" },
       { name: "Contact", url: "/contact", description: "Get in touch" },
     ],
   };

@@ -29,7 +29,7 @@ import {
   SOCIAL_SEED,
   TESTIMONIALS_SEED,
 } from "@/constants/seed-data";
-import { DEFAULT_SEO, DEFAULT_SETTINGS } from "@/constants/site";
+import { DEFAULT_SEO, DEFAULT_SETTINGS, RESUME_FILE } from "@/constants/site";
 
 // Server-only variable — never embedded in the client bundle.
 const API_URL = (process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000/api").replace(/\/$/, "");
@@ -116,12 +116,33 @@ async function backendFetch<T>(
 
 /* ── Hero ─────────────────────────────────────────────────── */
 export const getHero = cache(async (): Promise<Hero> => {
-  return backendFetch<Hero>("/content/hero", { revalidate: 3600 });
+  const hero = await backendFetch<Hero>("/content/hero", { revalidate: 3600 });
+  return {
+    ...hero,
+    ctas: hero.ctas
+      // GitHub is disabled sitewide — see getSocialLinks below.
+      .filter((cta) => cta.icon !== "Github")
+      // The /resume page is disabled, so the stored "/resume" href would 404.
+      // Point it at the PDF instead; hero.tsx renders that as a real download.
+      .map((cta) => (cta.href === "/resume" ? { ...cta, href: RESUME_FILE } : cta)),
+  };
 });
 
 /* ── About ────────────────────────────────────────────────── */
+
+/**
+ * The stored portrait URL still points at the retired `about.svg` placeholder.
+ * Renaming the asset is what busts stale browser caches, so the legacy path is
+ * remapped here. Uploading a real portrait via /admin/about writes a different
+ * URL, which passes through untouched — and this line can then go.
+ */
+const LEGACY_ABOUT_IMAGE = "/images/about.svg";
+const ABOUT_IMAGE = "/images/about-developer.svg";
+
 export const getAbout = cache(async (): Promise<About> => {
-  return backendFetch<About>("/content/about", { revalidate: 3600 });
+  const about = await backendFetch<About>("/content/about", { revalidate: 3600 });
+  if (about.image?.url !== LEGACY_ABOUT_IMAGE) return about;
+  return { ...about, image: { ...about.image, url: ABOUT_IMAGE } };
 });
 
 /* ── Projects ─────────────────────────────────────────────── */
@@ -280,7 +301,11 @@ export const getBlogTaxonomy = cache(async () => {
 
 /* ── Social ───────────────────────────────────────────────── */
 export const getSocialLinks = cache(async (): Promise<SocialLink[]> => {
-  return backendFetch<SocialLink[]>("/content/social", { revalidate: 3600 });
+  const socials = await backendFetch<SocialLink[]>("/content/social", { revalidate: 3600 });
+  // GitHub is disabled sitewide. Filtered here rather than in each consumer
+  // because the record still lives in the backend database — remove it from
+  // /admin/social and drop this filter to bring the link back.
+  return socials.filter((social) => social.platform !== "github");
 });
 
 /* ── Resume ───────────────────────────────────────────────── */

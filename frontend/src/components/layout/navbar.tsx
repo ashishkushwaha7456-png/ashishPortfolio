@@ -95,14 +95,14 @@ export function Navbar() {
             <ThemeToggle className="hidden md:inline-flex" />
             <ThemeToggleButton className="md:hidden" />
 
-            <Magnetic className="hidden sm:inline-flex" strength={0.25}>
+            {/* <Magnetic className="hidden sm:inline-flex" strength={0.25}>
               <Button asChild size="sm" variant="gradient" className="rounded-full">
                 <Link href="/contact">
                   Let&apos;s talk
                   <ArrowUpRight className="size-3.5" />
                 </Link>
               </Button>
-            </Magnetic>
+            </Magnetic> */}
 
             <button
               type="button"
@@ -137,18 +137,33 @@ export function Navbar() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.05 + index * 0.045, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <Link
-                    href={link.href}
-                    className={cn(
-                      "flex items-baseline justify-between border-b border-border/60 py-4 font-display text-3xl font-medium tracking-tight transition-colors",
-                      isActive(link.href) ? "text-primary" : "hover:text-primary",
-                    )}
-                  >
-                    {link.label}
-                    <span className="font-mono text-xs text-muted-foreground">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                  </Link>
+                  {/* Downloads must be plain anchors — next/link would try to
+                      client-navigate to the file instead of saving it. */}
+                  {"download" in link && link.download ? (
+                    <a
+                      href={link.href}
+                      download
+                      className="flex items-baseline justify-between border-b border-border/60 py-4 font-display text-3xl font-medium tracking-tight transition-colors hover:text-primary"
+                    >
+                      {link.label}
+                      <span className="font-mono text-xs text-muted-foreground">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                    </a>
+                  ) : (
+                    <Link
+                      href={link.href}
+                      className={cn(
+                        "flex items-baseline justify-between border-b border-border/60 py-4 font-display text-3xl font-medium tracking-tight transition-colors",
+                        isActive(link.href) ? "text-primary" : "hover:text-primary",
+                      )}
+                    >
+                      {link.label}
+                      <span className="font-mono text-xs text-muted-foreground">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                    </Link>
+                  )}
                 </motion.div>
               ))}
 
@@ -158,9 +173,9 @@ export function Navbar() {
                 transition={{ delay: 0.4 }}
                 className="mt-8 flex flex-col gap-3"
               >
-                <Button asChild size="lg" variant="gradient" className="w-full">
+                {/* <Button asChild size="lg" variant="gradient" className="w-full">
                   <Link href="/contact">Let&apos;s talk</Link>
-                </Button>
+                </Button> */}
                 <div className="flex items-center justify-between gap-3">
                   <ThemeToggle />
                   <a

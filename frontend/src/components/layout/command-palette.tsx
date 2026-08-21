@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 import {
   ArrowRight,
   FileText,
-  Github,
+  // Github,
   Linkedin,
   Mail,
   Moon,
@@ -14,7 +14,7 @@ import {
   Sun,
 } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { NAV_LINKS, PERSON, SECONDARY_NAV_LINKS } from "@/constants/site";
+import { NAV_LINKS, PERSON, RESUME_FILE, SECONDARY_NAV_LINKS } from "@/constants/site";
 import { cn } from "@/lib/utils";
 import { useKeyboardShortcut } from "@/hooks";
 
@@ -61,7 +61,17 @@ export function CommandPalette() {
         label: "Download resume",
         group: "Actions",
         icon: FileText,
-        run: go("/resume"),
+        run: () => {
+          setOpen(false);
+          // Synthesised anchor click — the /resume page is disabled, so this
+          // saves the PDF instead of navigating.
+          const a = document.createElement("a");
+          a.href = RESUME_FILE;
+          a.download = "";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        },
       },
       {
         id: "email",
@@ -74,16 +84,16 @@ export function CommandPalette() {
           window.location.href = `mailto:${PERSON.email}`;
         },
       },
-      {
-        id: "github",
-        label: "GitHub profile",
-        group: "Connect",
-        icon: Github,
-        run: () => {
-          setOpen(false);
-          window.open(PERSON.github, "_blank", "noopener");
-        },
-      },
+      // {
+      //   id: "github",
+      //   label: "GitHub profile",
+      //   group: "Connect",
+      //   icon: Github,
+      //   run: () => {
+      //     setOpen(false);
+      //     window.open(PERSON.github, "_blank", "noopener");
+      //   },
+      // },
       {
         id: "linkedin",
         label: "LinkedIn profile",

@@ -5,7 +5,7 @@ import {
   ArrowUpRight,
   Calendar,
   CheckCircle2,
-  Github,
+  // Github,
   Globe,
   Lightbulb,
   Users,
@@ -102,6 +102,7 @@ export default async function ProjectDetailPage({
               </a>
             </Button>
           )}
+          {/* GitHub source button — disabled
           {project.links.github && (
             <Button asChild size="lg" variant="outline" className="rounded-full">
               <a href={project.links.github} target="_blank" rel="noreferrer noopener">
@@ -110,6 +111,7 @@ export default async function ProjectDetailPage({
               </a>
             </Button>
           )}
+          */}
           <Button asChild size="lg" variant="ghost" className="rounded-full">
             <Link href="/projects">
               <ArrowLeft className="size-4" />

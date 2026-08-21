@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getPosts, getProjects } from "@/services/content.service";
+import { getPosts /*, getProjects */ } from "@/services/content.service";
 import { SITE_URL } from "@/constants/site";
 
 export const dynamic = "force-dynamic";
@@ -15,7 +15,7 @@ const STATIC_ROUTES: {
   { path: "/experience", priority: 0.85, changeFrequency: "monthly" },
   { path: "/skills", priority: 0.8, changeFrequency: "monthly" },
   { path: "/achievements", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/resume", priority: 0.85, changeFrequency: "monthly" },
+  // { path: "/resume", priority: 0.85, changeFrequency: "monthly" }, // page disabled
   { path: "/blog", priority: 0.9, changeFrequency: "weekly" },
   { path: "/contact", priority: 0.8, changeFrequency: "yearly" },
   { path: "/privacy", priority: 0.3, changeFrequency: "yearly" },
@@ -23,7 +23,7 @@ const STATIC_ROUTES: {
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [projects, posts] = await Promise.all([getProjects(), getPosts()]);
+  const [posts] = await Promise.all([getPosts()]);
   const now = new Date();
 
   return [
@@ -34,12 +34,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: route.priority,
     })),
 
+    /* Case-study detail pages are disabled — listing these would fill the
+       sitemap with 404s.
     ...projects.map((project) => ({
       url: `${SITE_URL}/projects/${project.slug}`,
       lastModified: project.updatedAt ? new Date(project.updatedAt) : now,
       changeFrequency: "monthly" as const,
       priority: project.featured ? 0.9 : 0.75,
     })),
+    */
 
     ...posts.map((post) => ({
       url: `${SITE_URL}/blog/${post.slug}`,
