@@ -15,7 +15,7 @@ export const PERSON = {
   shortLocation: "Noida, India",
   timezone: "Asia/Kolkata",
   github: "https://github.com/ashishkushwaha7456-png",
-  githubUsername: "ashishkushwaha",
+  githubUsername: "ashishkushwaha7456-png",
   linkedin: "https://www.linkedin.com/in/ashish-kumar-a41a96381/",
   // twitter: "https://x.com/ashishkushwaha",
   // twitterHandle: "@ashishkushwaha",
@@ -94,7 +94,7 @@ export const FOOTER_LINKS = [
     title: "Connect",
     links: [
       { label: "Contact", href: "/contact" },
-      // { label: "GitHub", href: PERSON.github, external: true },
+      { label: "GitHub", href: PERSON.github, external: true },
       { label: "LinkedIn", href: PERSON.linkedin, external: true },
       { label: "Email", href: `mailto:${PERSON.email}`, external: true },
     ],

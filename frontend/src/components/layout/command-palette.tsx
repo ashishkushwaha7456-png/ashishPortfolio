@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 import {
   ArrowRight,
   FileText,
-  // Github,
+  Github,
   Linkedin,
   Mail,
   Moon,
@@ -84,16 +84,16 @@ export function CommandPalette() {
           window.location.href = `mailto:${PERSON.email}`;
         },
       },
-      // {
-      //   id: "github",
-      //   label: "GitHub profile",
-      //   group: "Connect",
-      //   icon: Github,
-      //   run: () => {
-      //     setOpen(false);
-      //     window.open(PERSON.github, "_blank", "noopener");
-      //   },
-      // },
+      {
+        id: "github",
+        label: "GitHub profile",
+        group: "Connect",
+        icon: Github,
+        run: () => {
+          setOpen(false);
+          window.open(PERSON.github, "_blank", "noopener");
+        },
+      },
       {
         id: "linkedin",
         label: "LinkedIn profile",

@@ -44,7 +44,7 @@ export const HERO_SEED: Hero = {
   ctas: [
     { label: "Download Resume", href: "/resume", icon: "Download", variant: "primary" },
     // { label: "Let's Talk", href: "/contact", icon: "MessageCircle", variant: "outline" },
-    // { label: "GitHub", href: PERSON.github, icon: "Github", variant: "ghost", external: true },
+    { label: "GitHub", href: PERSON.github, icon: "Github", variant: "ghost", external: true },
     { label: "LinkedIn", href: PERSON.linkedin, icon: "Linkedin", variant: "ghost", external: true },
   ],
   highlights: [
@@ -1039,17 +1039,17 @@ export const TESTIMONIALS_SEED: Testimonial[] = [
 ];
 
 export const SOCIAL_SEED: SocialLink[] = [
-  // {
-  //   platform: "github",
-  //   label: "GitHub",
-  //   url: PERSON.github,
-  //   icon: "Github",
-  //   handle: `@${PERSON.githubUsername}`,
-  //   order: 1,
-  //   showInHero: true,
-  //   showInFooter: true,
-  //   status: "published",
-  // },
+  {
+    platform: "github",
+    label: "GitHub",
+    url: PERSON.github,
+    icon: "Github",
+    handle: `@${PERSON.githubUsername}`,
+    order: 1,
+    showInHero: true,
+    showInFooter: true,
+    status: "published",
+  },
   {
     platform: "linkedin",
     label: "LinkedIn",

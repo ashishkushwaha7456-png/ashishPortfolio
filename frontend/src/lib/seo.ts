@@ -76,7 +76,7 @@ export function buildMetadata({
       title: resolvedTitle,
       description: resolvedDescription,
       images: [ogImage],
-      creator: seo?.twitterHandle ?? PERSON.twitterHandle,
+      ...(seo?.twitterHandle ? { creator: seo.twitterHandle } : {}),
     },
     verification: seo?.googleSiteVerification
       ? { google: seo.googleSiteVerification }
@@ -107,7 +107,7 @@ export function personSchema(opts: { skills?: string[]; sameAs?: string[] } = {}
       addressRegion: "Uttar Pradesh",
       addressCountry: "IN",
     },
-    sameAs: opts.sameAs ?? [/* PERSON.github, */ PERSON.linkedin, PERSON.twitter],
+    sameAs: opts.sameAs ?? [PERSON.github, PERSON.linkedin],
     knowsAbout: opts.skills ?? [
       "React.js",
       "Next.js",
