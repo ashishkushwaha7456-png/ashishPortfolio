@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Link2, Linkedin, Twitter } from "lucide-react";
+import { Check, Link2, Linkedin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCopyToClipboard } from "@/hooks";
 
@@ -16,11 +16,6 @@ export function ShareBar({
   const { copied, copy } = useCopyToClipboard();
 
   const targets = [
-    {
-      label: "Share on X",
-      Icon: Twitter,
-      href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`,
-    },
     {
       label: "Share on LinkedIn",
       Icon: Linkedin,

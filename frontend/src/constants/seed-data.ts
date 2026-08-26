@@ -10,7 +10,7 @@ import type {
   SocialLink,
   Testimonial,
 } from "@/types";
-import { PERSON } from "./site";
+import { PERSON, RESUME_FILE } from "./site";
 
 /* ────────────────────────────────────────────────────────────
    Seed content — extracted from the resume.
@@ -40,9 +40,9 @@ export const HERO_SEED: Hero = {
     height: 640,
     type: "image",
   },
-  resumeUrl: "/resume/Ashish-Kumar-Resume.pdf",
+  resumeUrl: RESUME_FILE,
   ctas: [
-    { label: "Download Resume", href: "/resume", icon: "Download", variant: "primary" },
+    { label: "Download Resume", href: RESUME_FILE, icon: "Download", variant: "primary" },
     // { label: "Let's Talk", href: "/contact", icon: "MessageCircle", variant: "outline" },
     { label: "GitHub", href: PERSON.github, icon: "Github", variant: "ghost", external: true },
     { label: "LinkedIn", href: PERSON.linkedin, icon: "Linkedin", variant: "ghost", external: true },
@@ -1055,23 +1055,12 @@ export const SOCIAL_SEED: SocialLink[] = [
     label: "LinkedIn",
     url: PERSON.linkedin,
     icon: "Linkedin",
-    handle: "in/ashish-kumar-a41a96381/",
+    handle: PERSON.linkedinHandle,
     order: 2,
     showInHero: true,
     showInFooter: true,
     status: "published",
   },
-  // {
-  //   platform: "twitter",
-  //   label: "X / Twitter",
-  //   url: PERSON.twitter,
-  //   icon: "Twitter",
-  //   handle: PERSON.twitterHandle,
-  //   order: 3,
-  //   showInHero: true,
-  //   showInFooter: true,
-  //   status: "published",
-  // },
   {
     platform: "email",
     label: "Email",

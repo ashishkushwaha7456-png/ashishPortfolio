@@ -71,13 +71,9 @@ export function buildMetadata({
       images: [{ url: ogImage, width: 1200, height: 630, alt: resolvedTitle }],
       ...(type === "article" && { publishedTime, modifiedTime, authors: [PERSON.name], tags }),
     },
-    twitter: {
-      card: "summary_large_image",
-      title: resolvedTitle,
-      description: resolvedDescription,
-      images: [ogImage],
-      ...(seo?.twitterHandle ? { creator: seo.twitterHandle } : {}),
-    },
+    // X / Twitter is retired: null stops Next from deriving twitter:* tags
+    // from the Open Graph block above. Crawlers fall back to og: instead.
+    twitter: null,
     verification: seo?.googleSiteVerification
       ? { google: seo.googleSiteVerification }
       : undefined,

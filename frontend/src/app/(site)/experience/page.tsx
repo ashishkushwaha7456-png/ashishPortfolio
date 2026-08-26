@@ -61,7 +61,7 @@ export default async function ExperiencePage() {
       >
         <div className="flex flex-wrap gap-3">
           <Button asChild size="lg" variant="gradient" className="rounded-full">
-            {/* Plain anchor + download: the /resume page is disabled. */}
+            {/* Plain anchor + download: /api/resume streams the file. */}
             <a href={RESUME_FILE} download>
               <Download className="size-4" />
               Download resume

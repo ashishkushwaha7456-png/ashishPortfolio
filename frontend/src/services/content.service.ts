@@ -29,7 +29,7 @@ import {
   SOCIAL_SEED,
   TESTIMONIALS_SEED,
 } from "@/constants/seed-data";
-import { DEFAULT_SEO, DEFAULT_SETTINGS, RESUME_FILE } from "@/constants/site";
+import { DEFAULT_SEO, DEFAULT_SETTINGS, PERSON, RESUME_FILE } from "@/constants/site";
 
 // Server-only variable — never embedded in the client bundle.
 const API_URL = (process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000/api").replace(/\/$/, "");
@@ -95,7 +95,7 @@ async function backendFetch<T>(
       return {
         isActive: true,
         label: "Resume",
-        fileUrl: "/resume/Ashish-Kumar-Resume.pdf",
+        fileUrl: RESUME_FILE,
         version: "2026.1",
         updatedOn: "2026-01-15",
       } as unknown as T;
@@ -114,17 +114,48 @@ async function backendFetch<T>(
   }
 }
 
+/* ── Profile links ─────────────────────────────────────────
+ * The stored records still carry retired handles and an X / Twitter entry.
+ * PERSON in constants/site.ts is the source of truth for profile URLs, so
+ * backend values are rewritten on the way through. Fix the records in /admin
+ * and these helpers quietly become no-ops.
+ * ───────────────────────────────────────────────────────── */
+
+/** Platforms that no longer appear anywhere on the site. */
+const RETIRED_PROFILES = ["twitter", "x.com"];
+
+function isRetiredProfile(value: string) {
+  const v = value.toLowerCase();
+  return RETIRED_PROFILES.some((name) => v.includes(name));
+}
+
+/** A stored href that should hand over the resume file. */
+function isResumeHref(href: string) {
+  return href === "/resume" || href.endsWith(".pdf");
+}
+
+/** Rewrites a stored profile URL to the current one; leaves anything else. */
+function canonicalProfileUrl(url: string) {
+  if (/github[.]com/i.test(url)) return PERSON.github;
+  if (/linkedin[.]com/i.test(url)) return PERSON.linkedin;
+  return url;
+}
+
 /* ── Hero ─────────────────────────────────────────────────── */
 export const getHero = cache(async (): Promise<Hero> => {
   const hero = await backendFetch<Hero>("/content/hero", { revalidate: 3600 });
   return {
     ...hero,
+    resumeUrl: RESUME_FILE,
     ctas: hero.ctas
-      // GitHub is disabled sitewide — see getSocialLinks below.
-      .filter((cta) => cta.icon !== "Github")
-      // The /resume page is disabled, so the stored "/resume" href would 404.
-      // Point it at the PDF instead; hero.tsx renders that as a real download.
-      .map((cta) => (cta.href === "/resume" ? { ...cta, href: RESUME_FILE } : cta)),
+      .filter((cta) => !isRetiredProfile(cta.href) && !isRetiredProfile(cta.icon ?? ""))
+      // Any stored resume href — the disabled /resume page, or a raw PDF path —
+      // becomes the API-backed download route.
+      .map((cta) =>
+        isResumeHref(cta.href)
+          ? { ...cta, href: RESUME_FILE }
+          : { ...cta, href: canonicalProfileUrl(cta.href) },
+      ),
   };
 });
 
@@ -302,10 +333,22 @@ export const getBlogTaxonomy = cache(async () => {
 /* ── Social ───────────────────────────────────────────────── */
 export const getSocialLinks = cache(async (): Promise<SocialLink[]> => {
   const socials = await backendFetch<SocialLink[]>("/content/social", { revalidate: 3600 });
-  // GitHub is disabled sitewide. Filtered here rather than in each consumer
-  // because the record still lives in the backend database — remove it from
-  // /admin/social and drop this filter to bring the link back.
-  return socials.filter((social) => social.platform !== "github");
+  return (
+    socials
+      // X / Twitter is retired. Filtered here rather than in each consumer
+      // because the record still lives in the backend database — delete it
+      // from /admin/social and this filter stops mattering.
+      .filter((social) => !isRetiredProfile(social.platform) && !isRetiredProfile(social.url))
+      .map((social) => {
+        if (social.platform === "linkedin") {
+          return { ...social, url: PERSON.linkedin, handle: PERSON.linkedinHandle };
+        }
+        if (social.platform === "github") {
+          return { ...social, url: PERSON.github, handle: `@${PERSON.githubUsername}` };
+        }
+        return social;
+      })
+  );
 });
 
 /* ── Resume ───────────────────────────────────────────────── */

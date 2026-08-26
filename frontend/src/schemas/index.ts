@@ -412,7 +412,6 @@ export const seoSchema = z.object({
   description: z.string().min(50).max(180, "Keep descriptions under 180 characters"),
   keywords: z.array(z.string()).default([]),
   ogImage: z.string().min(1),
-  twitterHandle: z.string().optional(),
   canonical: optionalUrl,
   noIndex: z.boolean().default(false),
   googleSiteVerification: z.string().optional(),

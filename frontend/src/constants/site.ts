@@ -17,17 +17,16 @@ export const PERSON = {
   github: "https://github.com/ashishkushwaha7456-png",
   githubUsername: "ashishkushwaha7456-png",
   linkedin: "https://www.linkedin.com/in/ashish-kumar-a41a96381/",
-  // twitter: "https://x.com/ashishkushwaha",
-  // twitterHandle: "@ashishkushwaha",
+  linkedinHandle: "in/ashish-kumar-a41a96381",
   experienceStart: "2023-03-01",
 } as const;
 
 /**
- * The /resume page is disabled, so every "Resume" action downloads this file
- * directly. Pair it with a `download` attribute on a plain <a> — next/link
- * does not forward that attribute.
+ * Every "Resume" action points here. The route asks the backend resume API for
+ * the current file and streams it back as a download — nothing is served from
+ * /public. Use a plain <a> (not next/link), which would client-navigate.
  */
-export const RESUME_FILE = "/resume/Ashish-Kumar-Resume.pdf";
+export const RESUME_FILE = "/api/resume";
 
 export const SITE_CONFIG = {
   name: `${PERSON.name} — ${PERSON.title}`,
@@ -162,7 +161,6 @@ export const DEFAULT_SEO: SEOSettings = {
   description: SITE_CONFIG.description,
   keywords: [...SITE_CONFIG.keywords],
   ogImage: SITE_CONFIG.ogImage,
-  // twitterHandle: PERSON.twitterHandle,
   noIndex: false,
 };
 

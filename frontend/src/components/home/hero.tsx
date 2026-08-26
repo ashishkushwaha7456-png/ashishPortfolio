@@ -11,7 +11,7 @@ import { Icon } from "@/components/ui/icon";
 import { Magnetic } from "@/components/motion/magnetic";
 import { TextReveal, Typing } from "@/components/motion/text-reveal";
 import { ParticleField } from "@/components/home/particle-field";
-import { PERSON } from "@/constants/site";
+import { PERSON, RESUME_FILE } from "@/constants/site";
 import { cn } from "@/lib/utils";
 import type { Hero as HeroData, SocialLink } from "@/types";
 
@@ -125,9 +125,9 @@ export function Hero({ hero, socials }: HeroProps) {
                       }
                       className="rounded-full"
                     >
-                      {/* A file href is a download, not a route — next/link
-                          would try to client-navigate to the PDF. */}
-                      {cta.href.endsWith(".pdf") ? (
+                      {/* The resume href is a download, not a route —
+                          next/link would try to client-navigate to it. */}
+                      {cta.href === RESUME_FILE || cta.href.endsWith(".pdf") ? (
                         <a href={cta.href} download>
                           <Icon name={cta.icon} size={16} />
                           {cta.label}

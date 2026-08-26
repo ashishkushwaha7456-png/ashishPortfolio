@@ -740,7 +740,6 @@ export const ADMIN_FORMS: Record<string, ResourceFormDef> = {
       { name: "description", label: "Default description", type: "textarea", rows: 3, span: 12, required: true, section: "content", help: "50–180 characters." },
       { name: "keywords", label: "Keywords", type: "tags", span: 12, section: "content" },
       { name: "ogImage", label: "Default OG image", type: "image", span: 12, section: "content" },
-      { name: "twitterHandle", label: "Twitter handle", type: "text", span: 6, section: "meta" },
       { name: "canonical", label: "Canonical base URL", type: "text", span: 6, section: "meta" },
       { name: "googleSiteVerification", label: "Google verification token", type: "text", span: 8, section: "meta" },
       { name: "noIndex", label: "Block all indexing", type: "switch", span: 4, section: "meta", help: "Turn on only while the site is private." },

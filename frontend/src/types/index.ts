@@ -288,7 +288,6 @@ export interface SEOMeta {
   description: string;
   keywords: string[];
   ogImage: string;
-  twitterHandle?: string;
   canonical?: string;
   noIndex?: boolean;
 }

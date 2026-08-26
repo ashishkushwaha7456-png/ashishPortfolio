@@ -63,8 +63,8 @@ export function CommandPalette() {
         icon: FileText,
         run: () => {
           setOpen(false);
-          // Synthesised anchor click — the /resume page is disabled, so this
-          // saves the PDF instead of navigating.
+          // Synthesised anchor click — /api/resume streams the file from the
+          // backend resume record, so this saves it instead of navigating.
           const a = document.createElement("a");
           a.href = RESUME_FILE;
           a.download = "";

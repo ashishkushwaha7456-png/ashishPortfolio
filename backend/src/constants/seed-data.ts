@@ -1056,7 +1056,7 @@ export const SOCIAL_SEED: SocialLink[] = [
     label: "LinkedIn",
     url: PERSON.linkedin,
     icon: "Linkedin",
-    handle: "in/ashish-kumar-dev",
+    handle: "in/",
     order: 2,
     showInHero: true,
     showInFooter: true,
